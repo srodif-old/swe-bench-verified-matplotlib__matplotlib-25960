@@ -1449,6 +1449,45 @@ def test_subfigure_pdf():
     fig.savefig(buffer, format='pdf')
 
 
+def test_subfigure_wspace_hspace_warning():
+    """
+    Test that wspace and hspace parameters in subfigures emit a warning
+    when constrained layout is not enabled.
+    """
+    # Test without constrained layout - should warn
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        fig = plt.figure()
+        fig.subfigures(2, 2, wspace=0.1, hspace=0.1)
+        
+        # Check that warning was emitted
+        assert len(w) == 1
+        assert "wspace and hspace parameters in subfigures only work with constrained layout" in str(w[0].message)
+    plt.close(fig)
+
+    # Test with constrained layout - should not warn
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        fig = plt.figure(layout='constrained')
+        fig.subfigures(2, 2, wspace=0.1, hspace=0.1)
+        
+        # Check that no warning about wspace/hspace was emitted
+        for warning in w:
+            assert "wspace and hspace parameters in subfigures only work with constrained layout" not in str(warning.message)
+    plt.close(fig)
+
+    # Test with only wspace - should warn
+    with warnings.catch_warnings(record=True) as w:
+        warnings.simplefilter("always")
+        fig = plt.figure()
+        fig.subfigures(2, 2, wspace=0.1)
+        
+        # Check that warning was emitted
+        assert len(w) == 1
+        assert "wspace and hspace parameters in subfigures only work with constrained layout" in str(w[0].message)
+    plt.close(fig)
+
+
 def test_add_subplot_kwargs():
     # fig.add_subplot() always creates new axes, even if axes kwargs differ.
     fig = plt.figure()

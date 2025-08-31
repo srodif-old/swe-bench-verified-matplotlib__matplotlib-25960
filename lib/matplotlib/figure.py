@@ -1586,6 +1586,15 @@ default: %(va)s
                       width_ratios=width_ratios,
                       height_ratios=height_ratios)
 
+        # Warn if spacing parameters are used but constrained layout is not enabled
+        if (wspace is not None or hspace is not None) and \
+           not isinstance(self.get_layout_engine(), ConstrainedLayoutEngine):
+            _api.warn_external(
+                "wspace and hspace parameters in subfigures only work with "
+                "constrained layout. Try creating the figure with "
+                "layout='constrained' or fig.set_layout_engine('constrained')."
+            )
+
         sfarr = np.empty((nrows, ncols), dtype=object)
         for i in range(ncols):
             for j in range(nrows):
