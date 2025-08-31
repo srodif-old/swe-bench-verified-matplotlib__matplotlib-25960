@@ -1454,8 +1454,6 @@ def test_subfigure_wspace_hspace_warning():
     Test that wspace and hspace parameters in subfigures emit a warning
     when constrained layout is not enabled.
     """
-    import warnings
-    
     # Test without constrained layout - should warn
     with warnings.catch_warnings(record=True) as w:
         warnings.simplefilter("always")
